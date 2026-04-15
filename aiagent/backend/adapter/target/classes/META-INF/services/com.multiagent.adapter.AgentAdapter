@@ -1,5 +1,2 @@
 # Java SPI configuration for AgentAdapter implementations.
-com.multiagent.adapter.LLMAgentAdapter
-com.multiagent.adapter.RuleAgentAdapter
-com.multiagent.adapter.APIAgentAdapter
-com.multiagent.adapter.HybridAgentAdapter
+# Adapters requiring Spring dependencies are registered via Spring DI, not SPI.

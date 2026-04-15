@@ -1,8 +1,9 @@
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/RuleAgentAdapter.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/package-info.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/AgentAdapter.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/LLMAgentAdapter.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/AgentRegistry.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/HybridAgentAdapter.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/AgentConfigValidator.java
-/Users/liuwei/Desktop/work/project/UltronAgent/AiAgent/backend/adapter/src/main/java/com/multiagent/adapter/APIAgentAdapter.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/AgentAutoConfiguration.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/APIAgentAdapter.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/LLMAgentAdapter.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/AgentAdapter.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/AgentConfigValidator.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/AgentRegistry.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/HybridAgentAdapter.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/package-info.java
+/Users/liuwei/Desktop/work/crawler/studyAnnotation/aiagent/backend/adapter/src/main/java/com/multiagent/adapter/RuleAgentAdapter.java

@@ -70,7 +70,7 @@ public class DefaultFallbackExecutor implements FallbackExecutor {
             }
 
             try {
-                UnifiedResponse response = invokeWithTimeout(adapter, context, getTimeoutMs(agentId));
+                UnifiedResponse response = invokeWithTimeout(adapter, routing.getQuery(), context, getTimeoutMs(agentId));
 
                 if (qualityGate.check(response)) {
                     return response;
@@ -112,10 +112,10 @@ public class DefaultFallbackExecutor implements FallbackExecutor {
     /**
      * 带超时控制的 Agent 调用。
      */
-    private UnifiedResponse invokeWithTimeout(AgentAdapter adapter, SharedContext context, int timeoutMs)
+    private UnifiedResponse invokeWithTimeout(AgentAdapter adapter, String userInput, SharedContext context, int timeoutMs)
             throws Exception {
         UnifiedRequest request = UnifiedRequest.builder()
-                .input(context.getSystemPrompt())
+                .input(userInput)
                 .context(context)
                 .build();
 

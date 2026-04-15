@@ -24,17 +24,16 @@ export const useChatStore = defineStore('chat', () => {
 
   // ── WebSocket ──────────────────────────────────────────
   const ws = useWebSocket()
+  let wsConnected = false
 
   function handleChunk(chunk: UnifiedChunk) {
     switch (chunk.type) {
       case 'content':
         isStreaming.value = true
         streamingContent.value += chunk.content ?? ''
-        // Update the last assistant message in-place
         updateStreamingContent(chunk.content ?? '')
         break
       case 'progress':
-        // Progress events can be handled by UI components
         break
       case 'done':
         isStreaming.value = false
@@ -43,7 +42,6 @@ export const useChatStore = defineStore('chat', () => {
       case 'error':
         isStreaming.value = false
         streamingContent.value = ''
-        // Append error as system message
         if (chunk.error) {
           appendMessage({
             id: crypto.randomUUID(),
@@ -61,16 +59,26 @@ export const useChatStore = defineStore('chat', () => {
 
   // ── Actions ────────────────────────────────────────────
 
+  /** Ensure WebSocket is connected for the current conversation */
+  async function ensureConnected() {
+    if (!wsConnected && currentConversationId.value) {
+      await ws.connect(currentConversationId.value)
+      wsConnected = true
+    }
+  }
+
   /** Initialize WebSocket connection for a session */
-  async function initWebSocket(sessionId: string, token?: string) {
-    const wsInstance = useWebSocket({ token })
-    wsInstance.onChunk(handleChunk)
-    await wsInstance.connect(sessionId)
-    return wsInstance
+  async function initWebSocket(sessionId: string, _token?: string) {
+    if (wsConnected) {
+      ws.disconnect()
+      wsConnected = false
+    }
+    await ws.connect(sessionId)
+    wsConnected = true
   }
 
   /** Send a message (free text, @Agent, or /Skill) */
-  function sendMessage(
+  async function sendMessage(
     content?: string,
     agentId?: string,
     skillId?: string,
@@ -108,6 +116,7 @@ export const useChatStore = defineStore('chat', () => {
     streamingContent.value = ''
 
     // Send via WebSocket
+    await ensureConnected()
     const payload: SendMessagePayload = {
       conversationId: currentConversationId.value,
       content,

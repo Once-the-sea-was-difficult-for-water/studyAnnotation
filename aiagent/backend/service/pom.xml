@@ -49,6 +49,12 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- Milvus vector DB -->
+        <dependency>
+            <groupId>io.milvus</groupId>
+            <artifactId>milvus-sdk-java</artifactId>
+        </dependency>
+
         <!-- Jackson for JSON serialization (SkillCacheManager) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

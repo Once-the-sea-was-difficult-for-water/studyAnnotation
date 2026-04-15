@@ -192,7 +192,7 @@ services:
       MYSQL_USER: multiagent
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./backend/infrastructure/src/main/resources/db/migration/V1__init_schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -220,7 +220,7 @@ services:
       retries: 5
 
   etcd:
-    image: quay.io/coreos/etcd:v3.5.5
+    image: quay.io/coreos/etcd:v3.5.11
     container_name: milvus-etcd
     restart: unless-stopped
     environment:
@@ -242,7 +242,7 @@ services:
       retries: 3
 
   minio:
-    image: minio/minio:RELEASE.2023-03-13T19-46-17Z
+    image: minio/minio:latest
     container_name: milvus-minio
     restart: unless-stopped
     environment:
@@ -258,7 +258,7 @@ services:
       retries: 3
 
   milvus:
-    image: milvusdb/milvus:v2.3.4
+    image: milvusdb/milvus:v2.3.12
     container_name: milvus-standalone
     restart: unless-stopped
     command: ["milvus", "run", "standalone"]
@@ -283,7 +283,7 @@ services:
       start_period: 60s
 
   nacos:
-    image: nacos/nacos-server:v2.3.0
+    image: nacos/nacos-server:v2.4.3
     container_name: nacos-standalone
     restart: unless-stopped
     environment:
@@ -382,25 +382,10 @@ log_section "生成 Dockerfile"
 # 后端 Dockerfile
 if [[ ! -f "backend/Dockerfile" ]]; then
   cat > backend/Dockerfile << 'EOF'
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+FROM eclipse-temurin:17-jre
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 WORKDIR /app
-
-# 先复制 pom 文件，利用 Docker 层缓存
-COPY pom.xml .
-COPY api/pom.xml api/
-COPY service/pom.xml service/
-COPY adapter/pom.xml adapter/
-COPY infrastructure/pom.xml infrastructure/
-RUN mvn dependency:go-offline -q --no-transfer-progress
-
-# 复制源码并构建
-COPY . .
-RUN mvn clean package -DskipTests -q --no-transfer-progress
-
-FROM eclipse-temurin:17-jre-alpine
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-WORKDIR /app
-COPY --from=builder /app/api/target/multi-agent-api-*.jar app.jar
+COPY api/target/multi-agent-api-*.jar app.jar
 RUN chown appuser:appgroup app.jar
 USER appuser
 EXPOSE 8080
@@ -422,7 +407,7 @@ if [[ ! -f "frontend/Dockerfile" ]]; then
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --prefer-offline
+RUN npm install --prefer-offline
 COPY . .
 RUN npm run build
 
@@ -506,12 +491,35 @@ if ! $SKIP_BUILD; then
   if ! $BACKEND_ONLY; then
     log_section "构建前端 (npm)"
     cd frontend
-    npm ci --prefer-offline
+    npm install
     npm run build
     log_ok "前端构建完成"
     cd "$SCRIPT_DIR"
   fi
 fi
+
+# =============================================================================
+# 辅助函数: 等待容器健康
+# =============================================================================
+wait_healthy() {
+  local name=$1
+  local max_wait=${2:-120}
+  local elapsed=0
+  echo -n "  等待 $name 就绪"
+  while [[ $elapsed -lt $max_wait ]]; do
+    STATUS=$(docker inspect --format='{{.State.Health.Status}}' "$name" 2>/dev/null || echo "missing")
+    if [[ "$STATUS" == "healthy" ]]; then
+      echo -e " ${GREEN}✓${NC}"
+      return 0
+    fi
+    echo -n "."
+    sleep 3
+    elapsed=$((elapsed + 3))
+  done
+  echo -e " ${RED}✗ 超时${NC}"
+  log_error "$name 未能在 ${max_wait}s 内就绪，查看日志: docker logs $name"
+  return 1
+}
 
 # =============================================================================
 # 步骤 6: 启动基础设施
@@ -526,27 +534,6 @@ if ! $SKIP_INFRA; then
   else
     log_info "启动: $INFRA_SERVICES"
     docker compose up -d $INFRA_SERVICES
-
-    # 等待各服务就绪
-    wait_healthy() {
-      local name=$1
-      local max_wait=${2:-120}
-      local elapsed=0
-      echo -n "  等待 $name 就绪"
-      while [[ $elapsed -lt $max_wait ]]; do
-        STATUS=$(docker inspect --format='{{.State.Health.Status}}' "$name" 2>/dev/null || echo "missing")
-        if [[ "$STATUS" == "healthy" ]]; then
-          echo -e " ${GREEN}✓${NC}"
-          return 0
-        fi
-        echo -n "."
-        sleep 3
-        elapsed=$((elapsed + 3))
-      done
-      echo -e " ${RED}✗ 超时${NC}"
-      log_error "$name 未能在 ${max_wait}s 内就绪，查看日志: docker logs $name"
-      return 1
-    }
 
     wait_healthy "multi-agent-mysql"   120
     wait_healthy "multi-agent-redis"    60

@@ -4,6 +4,21 @@ server:
 spring:
   application:
     name: multi-agent-platform
+  config:
+    import: optional:nacos:${NACOS_SERVER_ADDR:localhost:8848}
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        namespace: ${NACOS_NAMESPACE:multi-agent}
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        import-check:
+          enabled: false
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        namespace: ${NACOS_NAMESPACE:multi-agent}
+        enabled: true
 
   # MySQL datasource
   datasource:
@@ -39,6 +54,9 @@ spring:
         options:
           model: ${AI_MODEL:gpt-4}
           temperature: 0.7
+      embedding:
+        options:
+          model: ${EMBEDDING_MODEL:text-embedding-v1}
 
   # Jackson
   jackson:
@@ -87,14 +105,6 @@ jwt:
 rate-limit:
   default-rpm: 60
   llm-rpm: 20
-
-# Nacos config center
-nacos:
-  config:
-    server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
-    namespace: ${NACOS_NAMESPACE:multi-agent}
-    group: DEFAULT_GROUP
-    file-extension: yaml
 
 # OpenTelemetry
 management:

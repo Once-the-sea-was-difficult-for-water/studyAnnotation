@@ -55,14 +55,14 @@ public class LLMAgentAdapter extends AgentAdapter {
 
     @Override
     public UnifiedResponse invoke(UnifiedRequest request) {
-        Prompt prompt = (Prompt) toNativeFormat(request.getContext());
+        Prompt prompt = buildPrompt(request);
         ChatResponse response = chatClient.call(prompt);
         return fromNativeFormat(response);
     }
 
     @Override
     public Flux<UnifiedChunk> stream(UnifiedRequest request) {
-        Prompt prompt = (Prompt) toNativeFormat(request.getContext());
+        Prompt prompt = buildPrompt(request);
         String taskId = request.getContext() != null ? request.getContext().getSessionId() : "default";
         AtomicBoolean cancelled = new AtomicBoolean(false);
         cancellationFlags.put(taskId, cancelled);
@@ -109,6 +109,38 @@ public class LLMAgentAdapter extends AgentAdapter {
                     }
                 }
             }
+        }
+        if (messages.isEmpty()) {
+            messages.add(new UserMessage(""));
+        }
+        return new Prompt(messages);
+    }
+
+    /**
+     * 构建 Prompt：先从 context 构建历史消息，再追加 request.input 作为当前用户消息。
+     */
+    private Prompt buildPrompt(UnifiedRequest request) {
+        List<Message> messages = new ArrayList<>();
+        SharedContext context = request.getContext();
+        if (context != null) {
+            if (context.getSystemPrompt() != null && !context.getSystemPrompt().isBlank()) {
+                messages.add(new SystemMessage(context.getSystemPrompt()));
+            }
+            if (context.getMessages() != null) {
+                for (com.multiagent.infrastructure.entity.Message msg : context.getMessages()) {
+                    switch (msg.getRole()) {
+                        case USER -> messages.add(new UserMessage(msg.getContent()));
+                        case ASSISTANT -> messages.add(new AssistantMessage(msg.getContent()));
+                        case SYSTEM -> messages.add(new SystemMessage(msg.getContent()));
+                        default -> messages.add(new UserMessage(msg.getContent()));
+                    }
+                }
+            }
+        }
+        // 追加当前用户输入
+        String input = request.getInput();
+        if (input != null && !input.isBlank()) {
+            messages.add(new UserMessage(input));
         }
         if (messages.isEmpty()) {
             messages.add(new UserMessage(""));

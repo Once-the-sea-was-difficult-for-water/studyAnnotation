@@ -5,6 +5,8 @@ com/multiagent/service/harness/DualAgentExecutor.class
 com/multiagent/service/auth/AuthResult$AuthResultBuilder.class
 com/multiagent/service/hallucination/HallucinationGuard.class
 com/multiagent/service/skill/TemplateRenderer.class
+com/multiagent/service/fallback/DefaultQualityGate.class
+com/multiagent/service/skill/DefaultToolRunner.class
 com/multiagent/service/paal/PAALResult.class
 com/multiagent/service/harness/DefaultFullHarnessExecutor.class
 com/multiagent/service/hallucination/HallucinationCheckResult$HallucinationCheckResultBuilder.class
@@ -14,8 +16,10 @@ com/multiagent/service/paal/Assessment$AssessmentBuilder.class
 com/multiagent/service/skill/SkillCacheManager.class
 com/multiagent/service/skill/ToolRunner.class
 com/multiagent/service/paal/ResultAssessor.class
+com/multiagent/service/orchestration/OrchestrationService$1.class
 com/multiagent/service/fallback/FallbackExecutor.class
 com/multiagent/service/skill/MissingParameterException.class
+com/multiagent/service/context/MilvusVectorStoreClient.class
 com/multiagent/service/skill/SkillResult$SkillResultBuilder.class
 com/multiagent/service/harness/HarnessResult$HarnessResultBuilder.class
 com/multiagent/service/rag/RAGConfig$RAGConfigBuilder.class
@@ -29,8 +33,12 @@ com/multiagent/service/skill/SkillRegistry$ScoredSkill.class
 com/multiagent/service/paal/TaskPlanner.class
 com/multiagent/service/skill/SkillHotReloader.class
 com/multiagent/service/paal/PAALInput.class
+com/multiagent/service/paal/DefaultResultAssessor.class
 com/multiagent/service/paal/PAALResult$PAALResultBuilder.class
+com/multiagent/service/context/MilvusConfig.class
+com/multiagent/service/auth/DefaultApprovalService.class
 com/multiagent/service/paal/DefaultPAALEngine.class
+com/multiagent/service/paal/DefaultTaskPlanner.class
 com/multiagent/service/fallback/QualityGate.class
 com/multiagent/service/auth/OperationClassifier.class
 com/multiagent/service/paal/Assessment.class
@@ -42,11 +50,14 @@ com/multiagent/service/harness/DefaultDualAgentExecutor.class
 com/multiagent/service/harness/FullHarnessExecutor.class
 com/multiagent/service/rag/KnowledgeEntry.class
 com/multiagent/service/skill/SkillRegistry.class
+com/multiagent/service/auth/DefaultSandboxExecutor.class
+com/multiagent/service/orchestration/OrchestrationService.class
 com/multiagent/service/skill/DefaultSkillExecutor$1.class
 com/multiagent/service/hallucination/HallucinationCheckResult.class
 com/multiagent/service/skill/SkillResult.class
 com/multiagent/service/harness/DualAgentResult$DualAgentResultBuilder.class
 com/multiagent/service/auth/DefaultAuthorizationGate.class
+com/multiagent/service/tracing/PerformanceMonitor.class
 com/multiagent/service/skill/SkillSemanticMatcher.class
 com/multiagent/service/auth/SandboxExecutor$SandboxResult.class
 com/multiagent/service/rag/RAGConfig.class
@@ -68,3 +79,4 @@ com/multiagent/service/auth/SandboxExecutor.class
 com/multiagent/service/sse/SSEManager.class
 com/multiagent/service/context/VectorStoreClient.class
 com/multiagent/service/context/DefaultContextManager.class
+com/multiagent/service/context/InMemoryVectorStoreClient.class

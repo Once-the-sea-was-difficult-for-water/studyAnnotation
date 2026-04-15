@@ -5,5 +5,6 @@ com/multiagent/adapter/AgentConfigValidator.class
 com/multiagent/adapter/LLMAgentAdapter.class
 com/multiagent/adapter/LLMAgentAdapter$1.class
 com/multiagent/adapter/AgentAdapter.class
+com/multiagent/adapter/AgentAutoConfiguration.class
 com/multiagent/adapter/AgentRegistry.class
 com/multiagent/adapter/APIAgentAdapter.class

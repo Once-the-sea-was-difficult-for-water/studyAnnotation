@@ -1,1 +1,10 @@
+com/multiagent/api/websocket/WebSocketConfig.class
+com/multiagent/api/security/JwtAuthenticationFilter.class
+com/multiagent/api/security/JwtTokenProvider.class
+com/multiagent/api/ratelimit/RateLimitFilter.class
+com/multiagent/api/websocket/ChatMessageHandler.class
 com/multiagent/api/MultiAgentApplication.class
+com/multiagent/api/security/PromptInjectionFilter.class
+com/multiagent/api/security/SecurityConfig.class
+com/multiagent/api/tracing/TracingConfig.class
+com/multiagent/api/security/AuthController.class

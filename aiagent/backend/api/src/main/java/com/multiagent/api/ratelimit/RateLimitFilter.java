@@ -63,7 +63,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         if (!tryAcquire(userId, maxRpm)) {
             log.warn("[RATE_LIMIT] 用户 {} 请求超限 (max={}/min), path={}", userId, maxRpm, path);
             auditLog.warn("[AUDIT][RATE_LIMITED] userId={}, path={}", userId, path);
-            response.setStatus(HttpServletResponse.SC_TOO_MANY_REQUESTS);
+            response.setStatus(429);
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(
                     "{\"error\":\"请求过于频繁，请稍后重试\",\"retryAfterSeconds\":60}");
